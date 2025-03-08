@@ -38,7 +38,7 @@ runs:
       with:
         version: ${{ inputs.version }}
         dest: ${{ inputs.dest }}
-        packge_json_file: ${{ inputs.package_json_file }}
+        package_json_file: ${{ inputs.package_json_file }}
         standalone: ${{ inputs.standalone }}
 
     - name: Expose pnpm config(s) through "$GITHUB_OUTPUT"
