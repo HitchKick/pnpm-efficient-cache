@@ -35,7 +35,6 @@ runs:
   using: 'composite'
   steps:
     - uses: pnpm/action-setup@v4
-      if: ${{ inputs.enable-corepack == 'false' }}
       with:
         version: ${{ inputs.version }}
         dest: ${{ inputs.dest }}
