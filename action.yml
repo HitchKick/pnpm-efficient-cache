@@ -1,4 +1,4 @@
-name: 'pnpm install'
+name: 'Setup pnpm with efficient caching'
 description: 'Run pnpm install with efficient caching'
 
 inputs:
@@ -27,7 +27,9 @@ inputs:
     default: 'false'
 
 outputs:
-  cache-hit: ${{ steps.cache.outputs.cache-hit }}
+  cache-hit:
+    description: Whether the cache hit or not
+    value: ${{ steps.cache.outputs.cache-hit }}
 
 runs:
   using: 'composite'
