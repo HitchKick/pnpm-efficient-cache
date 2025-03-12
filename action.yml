@@ -58,7 +58,7 @@ runs:
           ${{ runner.os }}-pnpm-store-cache-    
           
     - uses: actions/cache@v3
-      if: ${{ steps.cache-lookup.outputs.cache-hit != 'true }}
+      if: ${{ steps.cache-lookup.outputs.cache-hit != 'true' }}
       name: Setup pnpm cache
       id: cache
       with:
