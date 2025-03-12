@@ -25,6 +25,10 @@ inputs:
     description: When set to true, @pnpm/exe, which is a Node.js bundled package, will be installed, enabling using pnpm without Node.js.
     required: false
     default: 'false'
+  build-cache:
+    description: Whether the action is being used to build the cache or not
+    required: false
+    default: 'false'
 
 outputs:
   cache-hit:
@@ -58,7 +62,7 @@ runs:
           ${{ runner.os }}-pnpm-store-cache-    
           
     - uses: actions/cache@v3
-      if: ${{ steps.cache-lookup.outputs.cache-hit != 'true' }}
+      if: ${{ inputs.build-cache == 'true' || steps.cache-lookup.outputs.cache-hit != 'true' }}
       name: Setup pnpm cache
       id: cache
       with:
