@@ -46,8 +46,19 @@ runs:
       shell: bash
       run: |
         echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
+        
     - uses: actions/cache@v3
+      name: Setup pnpm cache
+      id: cache-lookup
+      with:
+        lookup-only: true
+        path: ${{ steps.pnpm-config.outputs.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-cache-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-cache-    
+          
+    - uses: actions/cache@v3
+      if: ${{ steps.cache-lookup.outputs.cache-hit != 'true }}
       name: Setup pnpm cache
       id: cache
       with:
@@ -57,12 +68,12 @@ runs:
           ${{ runner.os }}-pnpm-store-cache-
 
     - name: Prune pnpm store
-      if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      if: ${{ steps.cache-lookup.outputs.cache-hit != 'true' }}
       shell: bash
       run: pnpm prune store
 
     - name: Install dependencies
-      if: ${{ inputs.run_install == 'true' && steps.cache.outputs.cache-hit != 'true' }}
+      if: ${{ inputs.run_install == 'true' && steps.cache-lookup.outputs.cache-hit != 'true' }}
       shell: bash
       working-directory: ${{ inputs.cwd }}
       run: pnpm install --frozen-lockfile --prefer-offline
