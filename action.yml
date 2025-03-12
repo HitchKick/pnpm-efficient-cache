@@ -57,11 +57,12 @@ runs:
           ${{ runner.os }}-pnpm-store-cache-
 
     - name: Prune pnpm store
+      if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
       run: pnpm prune store
 
     - name: Install dependencies
-      if: ${{ inputs.run_install == 'true' }}
+      if: ${{ inputs.run_install == 'true' && steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
       working-directory: ${{ inputs.cwd }}
       run: pnpm install --frozen-lockfile --prefer-offline
