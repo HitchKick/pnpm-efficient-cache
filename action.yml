@@ -29,6 +29,10 @@ inputs:
     description: Whether the action is being used to build the cache or not
     required: false
     default: 'false'
+  config_command:
+    description: Command used to configure a private registry
+    required: false
+    default: ''
 
 outputs:
   cache-hit:
@@ -70,6 +74,11 @@ runs:
         key: ${{ runner.os }}-pnpm-store-cache-${{ hashFiles('pnpm-lock.yaml') }}
         restore-keys: |
           ${{ runner.os }}-pnpm-store-cache-
+
+    - name: Configure private registries
+      if: ${{ inputs.config_command != '' }}
+      shell: bash
+      run: ${{ inputs.config_command }}
 
     - name: Prune pnpm store
       if: ${{ inputs.run_install == 'true' && steps.cache-lookup.outputs.cache-hit != 'true' }}
